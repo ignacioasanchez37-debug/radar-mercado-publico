@@ -956,7 +956,7 @@ function abrirAjustes(){
     guardado.escribir('mp_ticket',''); cerrarPanel(); pintar();
   };
   $('guardar').onclick = () => {
-    app.ticket = $('in-ticket').value.trim();
+    app.ticket = limpiarTicket($('in-ticket').value);
     app.rubros = $('in-rubros').value.split(',').map(s => s.trim()).filter(Boolean);
     app.agilPalabras = $('in-agil').value.split(',').map(s => s.trim()).filter(Boolean);
     app.proxy = $('in-proxy').value.trim();
@@ -971,11 +971,15 @@ function abrirAjustes(){
   };
 }
 
+/* El ticket es un GUID: al copiarlo desde ChileCompra a veces se cuela un espacio o un salto de
+   línea en medio, que trim() no quita y deja el ticket inválido ("Sin datos"). */
+const limpiarTicket = s => (s || '').replace(/\s+/g, '');
+
 /* ---- eventos ---- */
 $('btn-ajustes').onclick = abrirAjustes;
 $('btn-refrescar').onclick = () => sincronizar();
 $('p-entrar').onclick = () => {
-  const t = $('p-ticket').value.trim();
+  const t = limpiarTicket($('p-ticket').value);
   if(!t){ $('p-ticket').focus(); return; }
   app.ticket = t;
   guardado.escribir('mp_ticket', t);
@@ -1104,7 +1108,7 @@ if('serviceWorker' in navigator){
 
 /* ---- arranque ---- */
 (function iniciar(){
-  app.ticket = guardado.leer('mp_ticket') || '';
+  app.ticket = limpiarTicket(guardado.leer('mp_ticket'));
   const r = guardado.leer('mp_rubros');
   app.rubros = (r === null ? RUBROS_INICIALES : r).split(',').map(s => s.trim()).filter(Boolean);
   compilarTerminos(app.rubros);
