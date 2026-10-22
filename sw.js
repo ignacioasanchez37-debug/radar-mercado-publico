@@ -1,7 +1,7 @@
 /* Radar Mercado Público — service worker
    Guarda el armazón de la app para que abra sin señal.
    Las consultas a api.mercadopublico.cl nunca se cachean: siempre van a la red. */
-const CACHE = 'radar-mp-v7';
+const CACHE = 'radar-mp-v8';
 const ARMAZON = [
   './',
   './index.html',
