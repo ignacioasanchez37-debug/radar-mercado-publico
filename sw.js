@@ -1,7 +1,7 @@
 /* Radar Mercado Público — service worker
    Guarda el armazón de la app para que abra sin señal.
    Las consultas a api.mercadopublico.cl nunca se cachean: siempre van a la red. */
-const CACHE = 'radar-mp-v8';
+const CACHE = 'radar-mp-v9';
 const ARMAZON = [
   './',
   './index.html',
@@ -11,7 +11,7 @@ const ARMAZON = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARMAZON)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARMAZON.map(u => new Request(u, {cache: 'reload'})))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
